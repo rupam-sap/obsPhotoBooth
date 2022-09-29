@@ -1,0 +1,18 @@
+{
+  "name": "obscontrolcenter",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "This is the server code to control the OBS functions from a webpage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rupam Bhattacharya",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "obs-websocket-js": "^5.0.1",
+    "body-parser":"^1.20.0",
+    "mime":"3.0.0"
+  }
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Display Webcam Stream</title>
+    <script type="text/javascript" src="./video.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        #container {
+            margin: 0px auto;
+            width: 1280px;
+            height: 720px;
+            border: 10px #333 solid;
+        }
+
+        #videoElement {
+            float: none;
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            z-index: 10;
+        }
+
+        .row {
+            width: 100%;
+            height: 33%;
+            float: center;
+        }
+
+        .gridElement {
+            float: left;
+            width: 33%;
+            height: 33%;
+            padding: 10px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div id="row1" class="row">
+        <div class="gridElement">
+            <img src="1.png"/>
+        </div>
+        <div class="gridElement">
+            <img src="2.png"/>
+        </div>
+        <div class="gridElement">
+            <img src="3.png"/>
+        </div>
+    </div>
+    <div id="row2" class="row"> 
+        <div class="gridElement">
+            <img src="4.png"/>
+        </div>
+        <div class="gridElement">
+        </div>
+        <div class="gridElement">
+            <img src="5.png"/>
+        </div>
+    </div>
+    <div id="row3" class="row">
+        <div class="gridElement">
+            <img src="6.png"/>
+        </div>
+        <div class="gridElement">
+            <img src="7.png"/>
+        </div>
+        <div class="gridElement">
+            <img src="8.png"/>
+        </div>
+    </div>
+    <video autoplay="true" id="videoElement"></video>
+</body>
+
+</html>

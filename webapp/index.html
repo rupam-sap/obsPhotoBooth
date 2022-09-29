@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        font-family: Arial;
+        margin-left: 150px;
+        margin-right: 150px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    img {
+        vertical-align: middle;
+    }
+
+    /* Position the image container (needed to position the left and right arrows) */
+    .container {
+        position: relative;
+    }
+
+    /* Hide the images by default */
+    .mySlides {
+        display: none;
+    }
+
+    /* Add a pointer when hovering over the thumbnail images */
+    .cursor {
+        cursor: pointer;
+    }
+
+    /* Next & previous buttons */
+    .prev,
+    .next {
+        cursor: pointer;
+        position: absolute;
+        top: 40%;
+        width: auto;
+        padding: 16px;
+        margin-top: -50px;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        border-radius: 0 3px 3px 0;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    /* Position the "next button" to the right */
+    .next {
+        right: 0;
+        border-radius: 3px 0 0 3px;
+    }
+
+    /* On hover, add a black background color with a little bit see-through */
+    .prev:hover,
+    .next:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Number text (1/3 etc) */
+    .numbertext {
+        color: #f2f2f2;
+        font-size: 12px;
+        padding: 8px 12px;
+        position: absolute;
+        top: 0;
+    }
+
+    /* Container for image text */
+    .caption-container {
+        text-align: center;
+        /* background-color: #222; */
+        padding: 2px 16px;
+        color: white;
+        height: 50px;
+        width: 100%;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* Six columns side by side */
+    .column {
+        float: left;
+        width: 16.66%;
+    }
+
+    /* Add a transparency effect for thumnbail images */
+    .demo {
+        opacity: 0.5;
+    }
+
+    .active,
+    .demo:hover {
+        opacity: 1;
+    }
+
+    input,
+    label {
+        display: inline-block;
+        vertical-align: center;
+        /* margin: 10px 0; */
+        width: 100%;
+        height: 40px;
+        color: black;
+        font-size: 24px;
+        border-radius: 2px;
+    }
+
+    .butt {
+        width: 65px;
+        height: 65px;
+        text-align: center;
+        color: white;
+        /* background: #23b7e5; */
+        font-size: 13px;
+        /* border-color: #23b7e5; */
+        /* border-radius: 2px; */
+        padding: 0px;
+        border: none;
+
+    }
+
+    .labl {
+        /* border: thin red solid; */
+    }
+
+    .alignleft {
+        float: left;
+        background: url("photoCam.png") no-repeat scroll 0 0 transparent;
+
+    }
+
+    .alignright {
+        float: right;
+        background: url("videoCam.png") no-repeat scroll 0 0 transparent;
+    }
+</style>
+
+<body>
+
+    <h2 style="text-align:center">Walldorf Durga Puja - Photo Booth</h2>
+
+    <div class="container">
+        <video autoplay="true" id="videoElement" width="100%"></video>
+
+        <div class="caption-container">
+            <!-- <input type="button" class="butt alignleft" id="photoCam"/>
+            <label class="control-label labl">Here to find location</label>
+            <input type="button" class="butt alignright" id="videoCam"/> -->
+            <input type="button" width="100%" height="60px" id="videoCam" value="Photo!" onclick="takePhoto()" />
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <img class="demo cursor" src="1.png" style="width:100%" onclick="currentSlide(1)" alt="The Woods">
+            </div>
+            <div class="column">
+                <img class="demo cursor" src="2.png" style="width:100%" onclick="currentSlide(2)" alt="Cinque Terre">
+            </div>
+            <div class="column">
+                <img class="demo cursor" src="3.png" style="width:100%" onclick="currentSlide(3)"
+                    alt="Mountains and fjords">
+            </div>
+            <div class="column">
+                <img class="demo cursor" src="4.png" style="width:100%" onclick="currentSlide(4)" alt="Northern Lights">
+            </div>
+            <div class="column">
+                <img class="demo cursor" src="5.png" style="width:100%" onclick="currentSlide(5)"
+                    alt="Nature and sunrise">
+            </div>
+            <div class="column">
+                <img class="demo cursor" src="6.png" style="width:100%" onclick="currentSlide(6)" alt="Snowy Mountains">
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="./video.js"></script>
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("demo");
+            // let captionText = document.getElementById("caption");
+            if (n > 6) { slideIndex = 1 }
+            if (n < 1) { slideIndex = 6 }
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:8088/setScene?scene=" + n);
+
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onload = () => console.log(xhr.responseText);
+
+            xhr.send();
+
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+
+            dots[slideIndex - 1].className += " active";
+            // captionText.innerHTML = dots[slideIndex - 1].alt;
+            // captionText.innerHTML = "Select your scene, take a pose, click!";
+        }
+
+        function takePhoto() {
+            let canvas = document.createElement('canvas');
+            let video = document.getElementById('videoElement');
+
+            canvas.width = Math.round(video.getBoundingClientRect().width);
+            canvas.height = Math.round(video.getBoundingClientRect().height);
+
+            let ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            console.log("saving image");
+            let image = canvas.toDataURL('images/jpeg');
+
+            fetch("http://localhost:8088/upload/image", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({'data':image})
+            }).then(function (res) {
+                if (res.ok) {
+                    alert("Perfect! ");
+                } else if (res.status == 401) {
+                    alert("Oops! ");
+                }
+            }, function (e) {
+                alert("Error submitting form!");
+            });
+        }
+    </script>
+
+</body>
+
+</html>
