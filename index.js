@@ -5,6 +5,7 @@ import { dirname } from 'path';
 import * as fs from 'fs';
 import mime from 'mime';
 import bodyParser from "body-parser";
+import fetch from 'node-fetch';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -12,8 +13,8 @@ const __dirname = dirname(__filename);
 
 /* Web Parts - Begin */
 const app = express();              //Instantiate an express app, the main work horse of this server
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb' }));
 const port = 8088;                  //Save the port number where your server will be listening
 app.use(express.static('webapp'))
 app.use(express.static('images'))
@@ -49,13 +50,37 @@ const uploadImage = async (req, res, next) => {
   let imageBuffer = decodedImg.data;
   let type = decodedImg.type;
   // let extension = mime.extension(type);
-  let fileName = "image.jpeg";// + extension;
+  let fileName = "ClickedPhoto_" + Date.now() + ".jpeg";// + extension;
+
+  // upload to server freeimage.host
+  // POST http://freeimage.host/api/1/upload/?key=6d207e02198a847aa98d0a2a901485a5&source=<Base64>&format=json
+  const params = new URLSearchParams();
+  // imagebb cca91cf1410f03fd1e462c8ec14e6d62
+
+  // params.append('key', '6d207e02198a847aa98d0a2a901485a5');
+  // params.append('format', 'json');
+  params.append('image', req.body.data.split(',')[1]);
+  // var form = new FormData();
+  // form.append('image', req.body.data);
+  var url = "";
+  try {
+    const data = await fetch('https://api.imgbb.com/1/upload?expiration=6000&key=cca91cf1410f03fd1e462c8ec14e6d62', { method: 'POST', body: params });
+    const jsonResp = await data.json();
+    // console.log(jsonResp.data.image.url);
+    url = jsonResp.data.image.url;
+  } catch (e) {
+    console.log(e);
+  }
+
   try {
     fs.writeFileSync("./images/" + fileName, imageBuffer, 'utf8');
-    return res.send({ "status": "success" });
+    res.setHeader('Content-Type', 'application/json');
+    return res.json({"uploadUrl": url });
   } catch (e) {
     next(e);
   }
+
+
 }
 
 app.post('/upload/image', uploadImage);
